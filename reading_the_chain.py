@@ -60,7 +60,7 @@ def is_ordered_block(w3, block_num):
             maxFeePerGas = transaction['maxFeePerGas']
             maxPriorityFeePerGas = transaction['maxPriorityFeePerGas']
             baseFeePerGas = block['baseFeePerGas']
-            priorityFee = min(maxPriorityFeePerGas, maxFeePerGas - baseFeePerGas)
+            priorityFee = min(maxPriorityFeePerGas + baseFeePerGas, maxFeePerGas)
             if parentPrice is not None and priorityFee > parentPrice:
                 ordered = False
                 break
