@@ -41,7 +41,9 @@ def get_ape_info(ape_id):
     metadata = response.json()
     print(metadata)
     data['image'] = metadata['image']
-    data['eyes'] = metadata['attributes'][3]['value']
+    for attribute in metadata['attributes']:
+        if attribute['trait_type'] == 'Eyes':
+            data['eyes'] = attribute['value']
 
 
     assert isinstance(data, dict), f'get_ape_info{ape_id} should return a dict'
