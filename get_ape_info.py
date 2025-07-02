@@ -39,6 +39,7 @@ def get_ape_info(ape_id):
     new_url = f"https://gateway.pinata.cloud/ipfs/{ipfs_has}"
     response = requests.get(new_url)
     metadata = response.json()
+    print(metadata)
     data['image'] = metadata['image']
     data['eyes'] = metadata['attributes'][0]['value']
 
