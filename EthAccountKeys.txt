@@ -1,0 +1,24 @@
+
+MetaMask
+Private Key:  a79d513de7ecaa28514dbff0d1f5c84acc481cb00c9948d241fca21f4abc03ff
+Address:  0x632CF2f21C6C8Db538E0356B3b92BCd645f92c46
+
+Student Faucet Results:
+Below is your new account information!
+
+Address:     0xA335a1cabc0EeEc374dd60FA562Dfa5605b22556
+Private key: 0xb5211cdfa37a0a77107518215c80485b571fc8a88e1cc6b80e3c7f5a3b524453
+Nmemonic phrase: rely hip robust drop fade buddy capable music debate arctic shed today
+
+Save this keypair and the nmemonic so that you can complete the faucet request,
+and use this account in upcoming assignments.
+
+Also, you can view your account on the AVAX block explorer at:
+https://testnet.snowtrace.io/address/0xA335a1cabc0EeEc374dd60FA562Dfa5605b22556
+and the BSC block explorer at:
+https://testnet.bscscan.com/address/0xA335a1cabc0EeEc374dd60FA562Dfa5605b22556
+codio@rocketthermos-nirvanashadow:~/workspace$ 
+
+Privately Done Results: 
+Address: 0x8A524399e312181B1F2F5e998E87413B340287A5
+Secret Key: 47421c2494b79b058c3a31375662bfb963da606afe7d62364880a00cbeea9f7e
