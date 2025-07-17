@@ -62,7 +62,7 @@ def generate_primes(num_primes):
                 break
         if prime == True: 
             primes_list.append(current_number)
-    current_number +=2
+        current_number +=2
     return primes_list
 
 
@@ -270,4 +270,5 @@ def hash_pair(a, b):
 
 
 if __name__ == "__main__":
-    merkle_assignment()
+    #merkle_assignment()
+    print(generate_primes(5))
