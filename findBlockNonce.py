@@ -22,14 +22,21 @@ def mine_block(k, prev_hash, transactions):
     #rand_lines: list of transaction strings in block we are trying to mine
     #nonce results in SHA256(prev_hash + rand_lines + nonce) for k LSBs
 
-    for transaction in transactions: 
-        hash = hashlib.sha256(transaction.encode('utf-8')).hexdigest()
-        for letter in hash [0:k]:
-            if letter != '0':
-                continue
-            else:
-                break
-    nonce = hash
+    hash = hashlib.sha256(prev_hash) 
+    nonce = None
+    for line in transactions: 
+        hash.update(line.encode('utf-8'))
+
+    for nonce in range(0, 2**20):
+        nonceTry = nonce.to_bytes(4, 'big')
+        hashTry = hash.copy()
+        hashTry.update(nonceTry)
+        hashDigest = hashTry.digest()
+
+        hashInt = int.from_bytes(hashDigest, 'big')
+        if hashInt & ((1<<k) -1) ==0:
+            nonce = hashInt
+            break
     assert isinstance(nonce, bytes), 'nonce should be of type bytes'
     return nonce
 
