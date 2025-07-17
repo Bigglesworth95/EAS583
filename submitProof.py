@@ -47,12 +47,9 @@ def generate_primes(num_primes):
         Function to generate the first 'num_primes' prime numbers
         returns list (with length n) of primes (as ints) in ascending order
     """
-    primes_list = [2]
-
-    #YOUR CODE HERE
     if num_primes == 0: 
-        return
-    
+        return []
+    primes_list = [2]
     current_number = 3
     while len(primes_list) < num_primes: 
         maxVal = int(math.sqrt(current_number))+1
@@ -65,7 +62,7 @@ def generate_primes(num_primes):
                 break
         if prime == True: 
             primes_list.append(current_number)
-    current_number +=1
+    current_number +=2
     return primes_list
 
 
