@@ -87,7 +87,6 @@ def build_merkle(leaves):
         the root hash produced by the "hash_pair" helper function
     """
 
-    #TODO YOUR CODE HERE
     if len(leaves) == 1: 
         return [leaves]
     elif len(leaves) == 0:
@@ -171,7 +170,6 @@ def send_signed_msg(proof, random_leaf):
     address, abi = get_contract_info(chain)
     w3 = connect_to(chain)
 
-    # YOUR CODE HERE
     contract = w3.eth.contract(address = address, abi=abi)
 
     tx = contract.functions.submit(proof, random_leaf).build_transaction({
@@ -185,10 +183,9 @@ def send_signed_msg(proof, random_leaf):
     tx['gas'] = int(gas_estimate*1.2)
 
     signed_tx = acct.sign_transaction(tx)
-    tx_hash = w3.eth.send_raw_transaction(signed_tx)
-
-    receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
-
+    raw = signed_tx.raw_transaction
+    tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
+    tx_hash = w3.to_hex(tx_hash)
     return tx_hash
 
 
@@ -273,5 +270,4 @@ def hash_pair(a, b):
 
 
 if __name__ == "__main__":
-    #merkle_assignment()
-    print(generate_primes(5))
+    merkle_assignment()
