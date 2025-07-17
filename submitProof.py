@@ -181,10 +181,13 @@ def send_signed_msg(proof, random_leaf):
         'chainId': w3.eth.chain_id
     })
 
-    tx['gas'] = w3.eth.estimate_gas(tx)
+    gas_estimate = w3.eth.estimate_gas(tx)
+    tx['gas'] = int(gas_estimate*1.2)
 
     signed_tx = acct.sign_transaction(tx)
     tx_hash = w3.eth.send_raw_transaction(signed_tx.rawTransaction)
+
+    receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
 
     return tx_hash
 
