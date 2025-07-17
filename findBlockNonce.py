@@ -35,7 +35,7 @@ def mine_block(k, prev_hash, transactions):
 
         hashInt = int.from_bytes(hashDigest, 'big')
         if hashInt & ((1<<k) -1) ==0:
-            nonce = hashInt
+            nonce = nonceTry
             break
     assert isinstance(nonce, bytes), 'nonce should be of type bytes'
     return nonce
