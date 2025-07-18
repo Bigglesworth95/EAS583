@@ -35,7 +35,7 @@ contract Destination is AccessControl {
         address underlyingToken = wrapped_tokens[_wrapped_token];
         require(underlyingToken != address(0), "Token not registered");
         
-        // First transfer tokens to this contract
+        // First transfer tokens from sender to this contract
         ERC20(_wrapped_token).transferFrom(msg.sender, address(this), _amount);
         
         // Then burn them
@@ -59,7 +59,7 @@ contract Destination is AccessControl {
         // Grant MINTER_ROLE to this contract
         BridgeToken(tokenAddress).grantRole(BridgeToken(tokenAddress).MINTER_ROLE(), address(this));
         
-        // Set up mappings
+        // Set up mappings correctly
         underlying_tokens[_underlying_token] = tokenAddress;
         wrapped_tokens[tokenAddress] = _underlying_token;
         tokens.push(tokenAddress);
