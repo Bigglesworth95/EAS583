@@ -25,17 +25,16 @@ contract Destination is AccessControl {
 	function wrap(address _underlying_token, address _recipient, uint256 _amount ) public onlyRole(WARDEN_ROLE) {
 		//YOUR CODE HERE
 
-		require(underlying_tokens[_unerlying_token] != address(0));
-		wrappedToken = wrapped_tokens[_underlying_token];
-		mint(address_recipiet, _amount);
-		BridgeToken wrapped_token.mint(address_recipiet, _amount);
+		address wrappedToken = wrapped_tokens[_underlying_token];
+		require(wrappedToken != address(0), "unregistered");
+		BridgeToken (wrapped_token).mint(_recipient, _amount);
 		emit Wrap(_underlying_token, wrappedToken, _recipient, _amount);
 	}
 
-	function unwrap(address _wrapped_token, address _recipient, uint256 _amount ) public {
-		require(wrapped_tokens[_wrapped_token] != address(0))
-		
+	function unwrap(address _wrapped_token, address _recipient, uint256 _amount ) public {	
 		address underlyingToken = wrapped_tokens[_wrapped_token];
+		require(underlyingToken != address(0), "unregistered")
+
 		BridgeToken(_wrapped_token).burnFrom(_recipient, _amount);
 		emit Unwrapped(msg.sender, _amount) 
 		
