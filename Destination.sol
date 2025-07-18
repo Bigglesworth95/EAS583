@@ -9,17 +9,13 @@ contract Destination is AccessControl {
     bytes32 public constant WARDEN_ROLE = keccak256("BRIDGE_WARDEN_ROLE");
     bytes32 public constant CREATOR_ROLE = keccak256("CREATOR_ROLE");
     
-    // underlying => wrapped
-    mapping(address => address) public underlying_tokens;
-    
-    // wrapped => underlying
-    mapping(address => address) public wrapped_tokens;
-    
+    mapping(address => address) public underlying_tokens;  // underlying → wrapped
+    mapping(address => address) public wrapped_tokens;    // wrapped → underlying
     address[] public tokens;
 
     event Creation(address indexed underlying_token, address indexed wrapped_token);
     event Wrap(address indexed underlying_token, address indexed wrapped_token, address indexed to, uint256 amount);
-    event Unwrap(address indexed underlying_token, address indexed wrapped_token, address indexed from, address to, uint256 amount);
+    event Unwrap(address indexed underlying_token, address indexed wrapped_token, address frm, address indexed to, uint256 amount);
 
     constructor(address admin) {
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
@@ -39,10 +35,11 @@ contract Destination is AccessControl {
         address underlyingToken = wrapped_tokens[_wrapped_token];
         require(underlyingToken != address(0), "Token not registered");
         
-        // Transfer tokens first then burn
-        BridgeToken token = BridgeToken(_wrapped_token);
-        token.transferFrom(msg.sender, address(this), _amount);
-        token.burn(_amount);
+        // First transfer tokens to this contract
+        ERC20(_wrapped_token).transferFrom(msg.sender, address(this), _amount);
+        
+        // Then burn them
+        BridgeToken(_wrapped_token).burn(_amount);
         
         emit Unwrap(underlyingToken, _wrapped_token, msg.sender, _recipient, _amount);
     }
