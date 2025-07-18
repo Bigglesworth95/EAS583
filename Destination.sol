@@ -36,21 +36,23 @@ contract Destination is AccessControl {
 		require(underlyingToken != address(0), "unregistered");
 
 		BridgeToken(_wrapped_token).burnFrom(msg.sender, _amount);
-		emit Unwrapped(msg.sender, _amount) 
+		emit Unwrapped(underlyingToken, _wrapped_token, msg.sender, _recipient, _amount) 
 		
 	}
 
 	function createToken(address _underlying_token, string memory name, string memory symbol ) public onlyRole(CREATOR_ROLE) returns(address) {
 		//YOUR CODE 
 		
-		BridgeToken token = new BridgeToken(_underlying_token, name, symbol);
+		require(underlying_tokens[_underlying_token]== address(0), "already created");
+
+		BridgeToken token = new BridgeToken(_underlying_token, name, symbol, address(this));
 		address tokenAddress = address(token);
 
-		underlying_tokens[_unerlying_token] = wrappedAddress;
-		wrapped_tokens[wrappedAddress] = _underlying_token;
-		tokens.push(wrappedAddress);
+		underlying_tokens[_underlying_token] = wrappedAddress;
+		wrapped_tokens[tokenAddress] = _underlying_token;
+		tokens.push(tokenAddress);
 
-		emit Creation(tokenAddress, name, symbol);
+		emit Creation(underlying_token, wrapped_token);
 		return tokenAddress;
 	}
 
