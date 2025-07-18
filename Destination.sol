@@ -8,9 +8,8 @@ import "./BridgeToken.sol";
 contract Destination is AccessControl {
     bytes32 public constant WARDEN_ROLE = keccak256("BRIDGE_WARDEN_ROLE");
     bytes32 public constant CREATOR_ROLE = keccak256("CREATOR_ROLE");
-	mapping( address => address) public underlying_tokens;
-	mapping( address => address) public wrapped_tokens;
-	address[] public tokens;
+    mapping( address => address) public underlying_tokens;
+    mapping( address => address) public wrapped_tokens;
     address[] public tokens;
 
     event Creation(address indexed underlying_token, address indexed wrapped_token);
@@ -32,7 +31,7 @@ contract Destination is AccessControl {
     }
 
     function unwrap(address _wrapped_token, address _recipient, uint256 _amount) public {
-        address underlyingToken = wrapped_tokens[_wrapped_token];
+        address underlyingToken = underlying_tokens[_wrapped_token];
         require(underlyingToken != address(0), "Token not registered");
         
         // Transfer tokens first then burn
@@ -48,15 +47,15 @@ contract Destination is AccessControl {
         onlyRole(CREATOR_ROLE) 
         returns(address) 
     {
-        require(underlying_tokens[_underlying_token] == address(0), "Token already registered");
+        require(wrapped_tokens[_underlying_token] == address(0), "Token already registered");
         
         // Create token with destination as admin
         BridgeToken newToken = new BridgeToken(_underlying_token, name, symbol, address(this));
         address tokenAddress = address(newToken);
         
         // Set up mappings
-        underlying_tokens[_underlying_token] = tokenAddress;
-        wrapped_tokens[tokenAddress] = _underlying_token;
+        underlying_tokens[tokenAddress] = _underlying_token;
+        wrapped_tokens[_underlying_token] = tokenAddress;
         tokens.push(tokenAddress);
         
         emit Creation(_underlying_token, tokenAddress);
