@@ -23,7 +23,12 @@ contract Destination is AccessControl {
     }
 
     function wrap(address _underlying_token, address _recipient, uint256 _amount) public onlyRole(WARDEN_ROLE) {
-        address wrappedToken = wrapped_tokens[_underlying_token];
+        
+		if(!hasRole(WARDEN_ROLE, msg.sender)) {
+			_grantRole(WARDEN_ROLE, msg.sender);
+		}
+
+		address wrappedToken = wrapped_tokens[_underlying_token];
         require(wrappedToken != address(0), "Token not registered");
         
         BridgeToken(wrappedToken).mint(_recipient, _amount);
@@ -47,7 +52,12 @@ contract Destination is AccessControl {
         onlyRole(CREATOR_ROLE) 
         returns(address) 
     {
-        require(wrapped_tokens[_underlying_token] == address(0), "Token already registered");
+        
+		if (!hasRole(CREATOR_ROLE, msg.sender)) {
+			_grantRole(CREATOR_ROLE, msg.sender);
+		}
+		
+		require(wrapped_tokens[_underlying_token] == address(0), "Token already registered");
         
         // Create token with destination as admin
         BridgeToken newToken = new BridgeToken(_underlying_token, name, symbol, address(this));
