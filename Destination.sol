@@ -51,9 +51,13 @@ contract Destination is AccessControl {
     {
         require(underlying_tokens[_underlying_token] == address(0), "Token already registered");
         
-        // Create token with destination as admin
-        BridgeToken newToken = new BridgeToken(_underlying_token, name, symbol, address(this));
+        // Create token with the contract deployer as admin
+        address deployer = getRoleMember(DEFAULT_ADMIN_ROLE, 0);
+        BridgeToken newToken = new BridgeToken(_underlying_token, name, symbol, deployer);
         address tokenAddress = address(newToken);
+        
+        // Grant MINTER_ROLE to this contract
+        BridgeToken(tokenAddress).grantRole(BridgeToken(tokenAddress).MINTER_ROLE(), address(this));
         
         // Set up mappings
         underlying_tokens[_underlying_token] = tokenAddress;
