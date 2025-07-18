@@ -35,11 +35,9 @@ contract Destination is AccessControl {
         address underlyingToken = wrapped_tokens[_wrapped_token];
         require(underlyingToken != address(0), "Token not registered");
         
-        // First transfer tokens from sender to this contract
-        ERC20(_wrapped_token).transferFrom(msg.sender, address(this), _amount);
-        
-        // Then burn them
-        BridgeToken(_wrapped_token).burn(_amount);
+        // Use burnFrom to burn tokens directly from the sender
+        // The Destination contract has MINTER_ROLE so it can burn without allowance
+        BridgeToken(_wrapped_token).burnFrom(msg.sender, _amount);
         
         emit Unwrap(underlyingToken, _wrapped_token, msg.sender, _recipient, _amount);
     }
