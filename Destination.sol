@@ -51,6 +51,8 @@ contract Destination is AccessControl {
         
         BridgeToken newToken = new BridgeToken(_underlying_token, name, symbol, address(this));
         address tokenAddress = address(newToken);
+		require(tokenAddress != address(0), "Deployment failed");
+
 
         underlying_tokens[tokenAddress] = _underlying_token;
         wrapped_tokens[_underlying_token] = tokenAddress;
