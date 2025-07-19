@@ -25,10 +25,6 @@ contract Destination is AccessControl {
     }
 
     function wrap(address _underlying_token, address _recipient, uint256 _amount) public onlyRole(WARDEN_ROLE) {
-        
-		if(!hasRole(WARDEN_ROLE, msg.sender)) {
-			_grantRole(WARDEN_ROLE, msg.sender);
-		}
 
 		address wrappedToken = wrapped_tokens[_underlying_token];
         require(wrappedToken != address(0), "Token not registered");
