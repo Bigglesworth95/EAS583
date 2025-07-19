@@ -4,6 +4,8 @@ pragma solidity ^0.8.17;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "./BridgeToken.sol";
+import "forge-std/console2.sol";
+
 
 contract Destination is AccessControl {
     bytes32 public constant WARDEN_ROLE = keccak256("BRIDGE_WARDEN_ROLE");
@@ -39,7 +41,6 @@ contract Destination is AccessControl {
         address underlyingToken = underlying_tokens[_wrapped_token];
         require(underlyingToken != address(0), "Token not registered");
         
-        // Transfer tokens first then burn
         BridgeToken token = BridgeToken(_wrapped_token);
         token.transferFrom(msg.sender, address(this), _amount);
         token.burn(_amount);
@@ -59,11 +60,10 @@ contract Destination is AccessControl {
 		
 		require(wrapped_tokens[_underlying_token] == address(0), "Token already registered");
         
-        // Create token with destination as admin
         BridgeToken newToken = new BridgeToken(_underlying_token, name, symbol, address(this));
         address tokenAddress = address(newToken);
-        
-        // Set up mappings
+        console2.log("Deployed new BridgeToken at:", address(newToken));
+
         underlying_tokens[tokenAddress] = _underlying_token;
         wrapped_tokens[_underlying_token] = tokenAddress;
         tokens.push(tokenAddress);
