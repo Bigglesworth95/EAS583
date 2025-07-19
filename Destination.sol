@@ -48,45 +48,19 @@ contract Destination is AccessControl {
         emit Unwrap(underlyingToken, _wrapped_token, msg.sender, _recipient, _amount);
     }
 
-function createToken(address _underlying_token, string memory name, string memory symbol) 
-    public 
-    onlyRole(CREATOR_ROLE) 
-    returns(address) 
-{
-    console2.log("=== createToken start ===");
-    console2.log(" msg.sender:", msg.sender);
-    console2.log(" hasRole(CREATOR_ROLE):", hasRole(CREATOR_ROLE, msg.sender));
+    function createToken(address _underlying_token, string memory name, string memory symbol) public onlyRole(CREATOR_ROLE) returns(address) {
+        
+		
+		require(_underlying_token != address(0), "Invalid underlying");
+        
+        BridgeToken newToken = new BridgeToken(_underlying_token, name, symbol, address(this));
+        address tokenAddress = address(newToken);
 
-    console2.log(" before role-grant check");
-    if (!hasRole(CREATOR_ROLE, msg.sender)) {
-        _grantRole(CREATOR_ROLE, msg.sender);
-        console2.log("   granted CREATOR_ROLE to:", msg.sender);
+        underlying_tokens[_underlying_token] = _underlying_token;
+        wrapped_tokens[tokenAddress] = tokenAddress;
+        tokens.push(tokenAddress);
+        
+        emit Creation(_underlying_token, tokenAddress);
+        return tokenAddress;
     }
-
-    require(wrapped_tokens[_underlying_token] == address(0), "Token already registered");
-    console2.log(" wrapped_tokens[_underlying_token] was zero, OK");
-
-    BridgeToken newToken = new BridgeToken(_underlying_token, name, symbol, address(this));
-    console2.log(" AFTER new BridgeToken(...) constructor");
-    console2.log("  newToken (raw):", address(newToken));
-
-    address tokenAddress = address(newToken);
-
-    console2.log(" this contract address:", address(this));
-    console2.log(" underlying_tokens[tokenAddress] before:", underlying_tokens[tokenAddress]);
-    console2.log(" wrapped_tokens[_underlying_token] before:", wrapped_tokens[_underlying_token]);
-
-    underlying_tokens[tokenAddress] = _underlying_token;
-    wrapped_tokens[_underlying_token] = tokenAddress;
-    tokens.push(tokenAddress);
-
-    console2.log(" underlying_tokens[tokenAddress] now:", underlying_tokens[tokenAddress]);
-    console2.log(" wrapped_tokens[_underlying_token] now:", wrapped_tokens[_underlying_token]);
-    console2.log(" tokens.length:", tokens.length);
-    console2.log("=== createToken end, returning:", tokenAddress);
-
-    emit Creation(_underlying_token, tokenAddress);
-    return tokenAddress;
-}
-
 }
