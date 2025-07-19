@@ -10,7 +10,8 @@ contract BridgeToken is ERC20, ERC20Burnable, AccessControl {
 	address public underlying;
 
     constructor( address _underlying, string memory name, string memory symbol, address admin ) ERC20(name,symbol) {
-		underlying = _underlying;
+		console2.log("BridgeToken constructor called!");
+        underlying = _underlying;
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
         _grantRole(MINTER_ROLE, admin);
     }
