@@ -16,7 +16,7 @@ contract Destination is AccessControl {
 
     event Creation(address indexed underlying_token, address indexed wrapped_token);
     event Wrap(address indexed underlying_token, address indexed wrapped_token, address indexed to, uint256 amount);
-    event Unwrap(address indexed underlying_token, address indexed wrapped_token, address indexed from, address to, uint256 amount);
+    event Unwrap(address indexed underlying_token, address indexed wrapped_token, address from, address indexed to, uint256 amount);
 
     constructor(address admin) {
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
