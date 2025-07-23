@@ -91,8 +91,8 @@ contract AMM is AccessControl{
 		ERC20(tokenOut).transfer(msg.sender, swapAmt);
 
 		//Step 6: calc new invariant + update invariant
-		uint256 newReserveA = tokenA.balanceOf(address(this));
-		uint256 newReserveB = tokenB.balanceOf(address(this));
+		uint256 newReserveA = ERC20(tokenA).balanceOf(address(this));
+		uint256 newReserveB = ERC20(tokenB).balanceOf(address(this));
 		uint256 newInvariant = newReserveA * newReserveB;
 
 		uint256 new_invariant = ERC20(tokenA).balanceOf(address(this))*ERC20(tokenB).balanceOf(address(this));
