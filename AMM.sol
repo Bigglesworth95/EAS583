@@ -93,7 +93,6 @@ contract AMM is AccessControl{
 		//Step 6: calc new invariant + update invariant
 		uint256 newReserveA = ERC20(tokenA).balanceOf(address(this));
 		uint256 newReserveB = ERC20(tokenB).balanceOf(address(this));
-		uint256 newInvariant = newReserveA * newReserveB;
 
 		uint256 new_invariant = ERC20(tokenA).balanceOf(address(this))*ERC20(tokenB).balanceOf(address(this));
 		require( new_invariant >= invariant, 'Bad trade' );
@@ -109,7 +108,30 @@ contract AMM is AccessControl{
 	*/
 	function provideLiquidity( uint256 amtA, uint256 amtB ) public {
 		require( amtA > 0 || amtB > 0, 'Cannot provide 0 liquidity' );
-		//YOUR CODE HERE
+
+		//First get the current supply of tokens A & B
+		uint256 tokenASupply = ERC20(tokenA).balanceOf(address(this));
+		uint256	tokenBSupply = ERC20(tokenB).balanceOf(address(this));
+
+		//Check for valid funds --> don't want to change price of token
+		if (invariant == 0) {
+			continue;
+		} else {
+		require(
+			tokenASupply * amtB == tokenBSupply * amtA);
+		}
+
+
+		//Then we mint shares
+
+		//transfer tokens
+		ERC20(tokenA).transferFrom(msg.sender, address(this), amtA);
+		ERC20(tokenB).transferFrom(msg.sender, address(this), amtB);
+
+		//set the invariant
+		invariant = (tokenASupply+ amtA) * (tokenBSupply + amtB);
+
+		//End by updating the reserves
 		emit LiquidityProvision( msg.sender, amtA, amtB );
 	}
 
