@@ -96,7 +96,7 @@ contract AMM is AccessControl{
 
 		//Step 7: emit a swap event
 		//	event Swap( address indexed _inToken, address indexed _outToken, uint256 inAmt, uint256 outAmt );
-		emit Swap(tokenIn, tokenOut, sellAmount, swapAmt)
+		emit Swap(tokenIn, tokenOut, sellAmount, swapAmt);
 	}
 
 	/*
