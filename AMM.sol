@@ -60,10 +60,11 @@ contract AMM is AccessControl{
 		//MY CODE:
 		//Step 1: is the token A or B? 
 		address tokenIn = sellToken; 
+		address tokenOut;
 		if (sellToken == tokenA) {
-			address tokenOut = tokenB;
+			tokenOut = tokenB;
 		} else {
-			address tokenOut = tokenA;
+			tokenOut = tokenA;
 		}
 
 		//Step 2: get the reserves
