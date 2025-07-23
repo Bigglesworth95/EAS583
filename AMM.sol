@@ -59,10 +59,13 @@ contract AMM is AccessControl{
 
 		//MY CODE:
 		//Step 1: is the token A or B? 
-		bool isTokenA = sellToken == tokenA;
-		(ERC20 tokenIn, ERC20 tokenOut) = isTokenA //if statement determining which token is 'in token' 
-			? (tokenA, tokenB)
-			: (tokenB, tokenA);
+		if (tokenA == sellToken) {
+			address tokenIn = tokenA;
+			address tokenOut = tokenB;
+		} else {
+			address tokenIn = tokenB;
+			address tokenOut = tokenA
+		}
 
 		//Step 2: pull tokens in
 		tokenIn.transferFrom(msg.sender, address(this), sellAmount);
