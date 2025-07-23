@@ -114,11 +114,9 @@ contract AMM is AccessControl{
 		uint256	tokenBSupply = ERC20(tokenB).balanceOf(address(this));
 
 		//Check for valid funds --> don't want to change price of token
-		if (invariant == 0) {
-			continue;
-		} else {
-		require(
-			tokenASupply * amtB == tokenBSupply * amtA);
+		if (invariant != 0) {
+			require(
+				tokenASupply * amtB == tokenBSupply * amtA);
 		}
 
 
