@@ -108,13 +108,6 @@ contract AMM is AccessControl{
 		uint256 tokenASupply = ERC20(tokenA).balanceOf(address(this));
 		uint256	tokenBSupply = ERC20(tokenB).balanceOf(address(this));
 
-		//Check for valid funds --> don't want to change price of token
-		if (invariant != 0) {
-			require(
-				tokenASupply * amtB == tokenBSupply * amtA);
-		}
-
-
 		//Then we mint shares
 
 		//transfer tokens
