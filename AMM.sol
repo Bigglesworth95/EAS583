@@ -59,11 +59,14 @@ contract AMM is AccessControl{
 
 		//MY CODE:
 		//Step 1: is the token A or B? 
-		address tokenIn = sellToken; 
+		address tokenIn;
 		address tokenOut;
-		if (sellToken == tokenA) {
+
+		if(sellToken == tokenA) {
+			tokenIn = tokenA;
 			tokenOut = tokenB;
-		} else {
+		} else if (sellToken = tokenB) {
+			tokenIn = tokenB;
 			tokenOut = tokenA;
 		}
 
@@ -80,7 +83,8 @@ contract AMM is AccessControl{
 		// k/(A + 0.9997dA) - B  = -db
 		//db = B - k/(A+0.9997dA)
 		
-		swapAmt = reserveOut - invariant/(reserveIn + sellAmount*0.9997);
+		uint realAmountIn = (sellAmount * (10000 - feebps))/10000;
+		swapAmt = reserveOut - invariant/(reserveIn + realAmountIn);
 		
 		//Step 5: transfer toekns out to sender
 		tokenOut.transfer(msg.sender, swapAmt);
