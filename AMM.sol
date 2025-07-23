@@ -62,9 +62,10 @@ contract AMM is AccessControl{
 		if (tokenA == sellToken) {
 			address tokenIn = tokenA;
 			address tokenOut = tokenB;
-		} else {
+		}
+		 if (tokenB == sellToken) {
 			address tokenIn = tokenB;
-			address tokenOut = tokenA
+			address tokenOut = tokenA;
 		}
 
 		//Step 2: pull tokens in
