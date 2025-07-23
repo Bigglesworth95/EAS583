@@ -59,14 +59,16 @@ contract AMM is AccessControl{
 
 		//MY CODE:
 		//Step 1: is the token A or B? 
-		if (tokenA == sellToken) {
-			address tokenIn = tokenA;
-			address tokenOut = tokenB;
+		address tokenIn = sellToken; 
+		if (sellToken == tokenA) {
+			tokenOut = tokenB;
+		} else {
+			tokenOut = tokenA;
 		}
-		 if (tokenB == sellToken) {
-			address tokenIn = tokenB;
-			address tokenOut = tokenA;
-		}
+
+		//Step 2: get the reserves
+		uint256 reserveIn = ERC20(tokenIn).balanceOf(address(this));
+		uint256 reserveOut = ERC20(tokenOut).balanceOf(address(this));
 
 		//Step 2: pull tokens in
 		tokenIn.transferFrom(msg.sender, address(this), sellAmount);
@@ -77,8 +79,8 @@ contract AMM is AccessControl{
 		// k/(A + 0.9997dA) - B  = -db
 		//db = B - k/(A+0.9997dA)
 		
-		swapAmt = tokenOut.balanceOf(address(this)) - invariant/(tokenIn.balanceOf(address(this)) + sellAmount*0.9997);
-
+		swapAmt = reserveOut - invariant/(reserveIn + sellAmount*0.9997);
+		
 		//transfer toekns out to sender
 		tokenOut.transfer(msg.sender, swapAmt);
 
