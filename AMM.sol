@@ -61,19 +61,19 @@ contract AMM is AccessControl{
 		//Step 1: is the token A or B? 
 		address tokenIn = sellToken; 
 		if (sellToken == tokenA) {
-			tokenOut = tokenB;
+			address tokenOut = tokenB;
 		} else {
-			tokenOut = tokenA;
+			address tokenOut = tokenA;
 		}
 
 		//Step 2: get the reserves
 		uint256 reserveIn = ERC20(tokenIn).balanceOf(address(this));
 		uint256 reserveOut = ERC20(tokenOut).balanceOf(address(this));
 
-		//Step 2: pull tokens in
+		//Step 3: pull tokens in
 		tokenIn.transferFrom(msg.sender, address(this), sellAmount);
 
-		//calculate amount of tokens to send out
+		//Step 4: calculate amount of tokens to send out
 		//formula: k = (A + dA) * (B -dB)
 		//formula w/ fee: k = (A + 0.9997dA) * (B-db)
 		// k/(A + 0.9997dA) - B  = -db
@@ -81,12 +81,21 @@ contract AMM is AccessControl{
 		
 		swapAmt = reserveOut - invariant/(reserveIn + sellAmount*0.9997);
 		
-		//transfer toekns out to sender
+		//Step 5: transfer toekns out to sender
 		tokenOut.transfer(msg.sender, swapAmt);
+
+		//Step 6: calc new invariant + update invariant
+		uint256 newReserveA = tokenA.balanceOf(address(this));
+		uint256 newReserveB = tokenB.balanceOf(address(this));
+		uint256 newInvariant = newReserveA * newReserveB;
 
 		uint256 new_invariant = ERC20(tokenA).balanceOf(address(this))*ERC20(tokenB).balanceOf(address(this));
 		require( new_invariant >= invariant, 'Bad trade' );
 		invariant = new_invariant;
+
+		//Step 7: emit a swap event
+		//	event Swap( address indexed _inToken, address indexed _outToken, uint256 inAmt, uint256 outAmt );
+		emit Swap(tokenIn, tokenOut, sellAmount, swapAmt)
 	}
 
 	/*
