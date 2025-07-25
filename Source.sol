@@ -23,22 +23,23 @@ contract Source is AccessControl {
 
 	function deposit(address _token, address _recipient, uint256 _amount ) public {
 		//Check if token being depoisted has been registered
-		requirerequire(approved[_token]);
+		require(approved[_token]);
 		//Use transferFrom to pull the tokens into the deposit contract
 		ERC20(_token).transferFrom(msg.sender, address(this), _amount);
 		//Emit a deposit event so that the bridge operator knows to make the necessary actions
 		//on the destination side
-		emit Deposit(_token, msg._recipient, _amount);
+		emit Deposit(_token, _recipient, _amount);
 	}
 
 	function withdraw(address _token, address _recipient, uint256 _amount ) onlyRole(WARDEN_ROLE) public {
 		//check if function is being called by the contract owner
 		require(msg.sender == _recipient);
+
 		//push the tokens to the recipient using the ERC20 transfer function
 		ERC20(_token).transfer(_recipient, _amount);
 
 		//emit a withdraw event
-		emit Withdrawal(token, _recipient, _amount);
+		emit Withdrawal(_token, _recipient, _amount);
 	}
 
 	function registerToken(address _token) onlyRole(ADMIN_ROLE) public {
@@ -58,5 +59,3 @@ contract Source is AccessControl {
 
 
 }
-
-
