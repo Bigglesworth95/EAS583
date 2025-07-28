@@ -65,7 +65,7 @@ def scan_blocks(chain, start_block, end_block, contract_address, eventfile='depo
                 'transactionHash': ev.transactionHash.hex(),
                 'address': ev.address
             }])
-            pd.concat([df, row], ignore_index = True)
+            df = pd.concat([df, row], ignore_index = True)
     else:
         for block_num in range(start_block,end_block+1):
             event_filter = contract.events.Deposit.create_filter(from_block=block_num,to_block=block_num,argument_filters=arg_filter)
@@ -81,5 +81,5 @@ def scan_blocks(chain, start_block, end_block, contract_address, eventfile='depo
                     'transactionHash': ev.transactionHash.hex(),
                     'address': ev.address
             }])
-                pd.concat([df, row], ignore_index = True)
+                df = pd.concat([df, row], ignore_index = True)
     df.to_csv(eventfile, index=False)
