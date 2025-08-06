@@ -27,6 +27,8 @@ def get_contract_info(chain, contract_info):
     try:
         with open(contract_info, 'r')  as f:
             contracts = json.load(f)
+        abiFuncs = [entry['name'] for entry in contracts[chain]['abi'] if entry ['type'] == 'function']
+        print(f"Loaded ABI for {chain}: {abiFuncs}")
     except Exception as e:
         print( f"Failed to read contract info\nPlease contact your instructor\n{e}" )
         return 0
