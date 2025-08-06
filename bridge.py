@@ -76,7 +76,7 @@ def scan_blocks(chain, contract_info="contract_info.json"):
                 tokenAddress = deposit["args"]["token"]
                 recipient = deposit["args"]["recipient"]
                 amount = deposit["args"]["amount"]
-                tx = contract.wrap(tokenAddress, recipient, amount).build_transaction({
+                tx = contract.functions.wrap(tokenAddress, recipient, amount).build_transaction({
                     "from": accountAddress, 
                     "nonce": nonce,
                     "gas": 30000, 
@@ -94,7 +94,7 @@ def scan_blocks(chain, contract_info="contract_info.json"):
                 tokenAddress = unwrap["args"]["token"]
                 recipient = unwrap["args"]["recipient"]
                 amount = unwrap["args"]["amount"]
-                tx = contract.withdraw(tokenAddress, recipient, amount).build_transaction({
+                tx = contract.functions.withdraw(tokenAddress, recipient, amount).build_transaction({
                     "from": accountAddress,
                     "nonce": nonce,
                     "gas": 30000,
