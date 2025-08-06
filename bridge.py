@@ -87,7 +87,7 @@ def scan_blocks(chain, contract_info="contract_info.json"):
                 tokenAddress = deposit["args"]["token"]
                 recipient = deposit["args"]["recipient"]
                 amount = deposit["args"]["amount"]
-                #print(f"Calling wrap() with token: {tokenAddress}, recipient: {recipient}, amount: {amount}")
+                #(f"Calling wrap() with token: {tokenAddress}, recipient: {recipient}, amount: {amount}")
                 tx = activeContract.functions.wrap(tokenAddress, recipient, amount).build_transaction({
                     "from": activeAccountAddress, 
                     "nonce": activeNonce,
@@ -108,7 +108,7 @@ def scan_blocks(chain, contract_info="contract_info.json"):
                 tokenAddress = unwrap["args"]["token"]
                 recipient = unwrap["args"]["recipient"]
                 amount = unwrap["args"]["amount"]
-                #print(f"Calling unwrap() with token: {tokenAddress}, recipient: {recipient}, amount: {amount}")
+                print(f"Calling unwrap() with token: {tokenAddress}, recipient: {recipient}, amount: {amount}")
                 tx = activeContract.functions.withdraw(tokenAddress, recipient, amount).build_transaction({
                     "from": activeAccountAddress,
                     "nonce": activeNonce,
@@ -120,7 +120,11 @@ def scan_blocks(chain, contract_info="contract_info.json"):
                 signedTx = activeW3.eth.account.sign_transaction(tx, privateKey)
                 txHash = activeW3.eth.send_raw_transaction(signedTx.raw_transaction)
                 receipt = activeW3.eth.wait_for_transaction_receipt(txHash)
-                #print(f"finished wrapping. Here are the results: \n txHash: {txHash}, \n receipt status: {receipt.status}")
+                print(f"finished wrapping. Here are the results: \n txHash: {txHash}, \n receipt status: {receipt.status}")
+                WARDEN_ROLE = activeW3.keccak("WARDEN_ROLE")
+                has_warden = activeContract.functions.hasRole(WARDEN_ROLE, activeAccountAddress).call()
+                print("Caller has WARDEN_ROLE on destination:", has_warden)
+
 
         counter +=1
         time.sleep(3)
