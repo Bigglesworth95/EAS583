@@ -91,7 +91,7 @@ def scan_blocks(chain, contract_info="contract_info.json"):
                     "nonce": activeNonce,
                     "gas": 30000, 
                     "gasPrice": activeW3.eth.gas_price,
-                    "chainId": 43113
+                    "chainId": 97
                 })
                 activeNonce+=1
                 signedTx = activeW3.eth.account.sign_transaction(tx, privateKey)
@@ -109,7 +109,7 @@ def scan_blocks(chain, contract_info="contract_info.json"):
                     "nonce": activeNonce,
                     "gas": 30000,
                     "gasPrice": activeW3.eth.gas_price,
-                    "chainId": 97
+                    "chainId": 43113
                 })
                 activeNonce+=1
                 signedTx = activeW3.eth.account.sign_transaction(tx, privateKey)
