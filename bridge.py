@@ -29,7 +29,7 @@ def get_contract_info(chain, contract_info):
         with open(contract_info, 'r')  as f:
             contracts = json.load(f)
         abiFuncs = [entry['name'] for entry in contracts[chain]['abi'] if entry ['type'] == 'function']
-        print(f"Loaded ABI for {chain}: {abiFuncs}")
+        #print(f"Loaded ABI for {chain}: {abiFuncs}")
     except Exception as e:
         print( f"Failed to read contract info\nPlease contact your instructor\n{e}" )
         return 0
@@ -127,6 +127,6 @@ def scan_blocks(chain, contract_info="contract_info.json"):
 
 
         counter +=1
-        time.sleep(3)
+        time.sleep(1)
 
 
