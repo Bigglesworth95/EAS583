@@ -53,14 +53,16 @@ bnb_account = bnb_w3.eth.account.from_key(private_key)
 bnbAddress = bnb_account.address
 avaxNonce = avax_w3.eth.get_transaction_count(avaxAddress)
 bnbNonce = bnb_w3.eth.get_transaction_count(bnbAddress)
+
+num=1
 for token in tokens:
-    num = 1 
     tokenAddress = token[1]
-    if token[0] == "avax":
+
+    if token[0].strip() == "avax":
         tx = srcContract.functions.registerToken(tokenAddress).build_transaction({
             'from': avaxAddress,
             'nonce': avaxNonce,
-            'gas': 30000,
+            'gas': 15000000,
             'gasPrice': avax_w3.eth.gas_price,
             'chainId': 43113
         })
@@ -69,12 +71,15 @@ for token in tokens:
         txHash = avax_w3.eth.send_raw_transaction(signedTx.raw_transaction)
         receipt = avax_w3.eth.wait_for_transaction_receipt(txHash)
         avaxNonce +=1
+        print(f"Tried to register token {tokenAddress} on chain {token[0]} with nonce {avaxNonce}")
+        print("TX Hash: ", txHash.hex())
+        print("Reciept Status: ", receipt.status)
 
     else:
         tx = destContract.functions.createToken(tokenAddress, f"bridgeToken{num}", "symbol{num}").build_transaction({
             "from": bnbAddress, 
             "nonce": bnbNonce, 
-            "gas": 30000, 
+            "gas": 15000000, 
             "gasPrice": bnb_w3.eth.gas_price,
             "chainId": 97
         })
@@ -83,5 +88,8 @@ for token in tokens:
         txHash = bnb_w3.eth.send_raw_transaction(signedTx.raw_transaction)
         receipt = bnb_w3.eth.wait_for_transaction_receipt(txHash)
         bnbNonce +=1
+        print(f"Tried to register token {tokenAddress} on chain {token[0]} with nonce {bnbNonce}")
+        print("TX Hash: ", txHash.hex())
+        print("Reciept Status: ", receipt.status)
     num+=1
 

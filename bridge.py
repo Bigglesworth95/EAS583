@@ -3,7 +3,6 @@ from web3.providers.rpc import HTTPProvider
 from web3.middleware import ExtraDataToPOAMiddleware #Necessary for POA chains
 from datetime import datetime
 import json
-import pandas as pd
 
 
 def connect_to(chain):
@@ -76,27 +75,33 @@ def scan_blocks(chain, contract_info="contract_info.json"):
                 tokenAddress = deposit["args"]["token"]
                 recipient = deposit["args"]["recipient"]
                 amount = deposit["args"]["amount"]
-                contract.wrap(tokenAddress, recipient, amount).build_transaction({
+                tx = contract.wrap(tokenAddress, recipient, amount).build_transaction({
                     "from": accountAddress, 
                     "nonce": nonce,
                     "gas": 30000, 
                     "gasPrice": w3.eth.gas_price,
-                    "chainId": 97
+                    "chainId": 43113
                 })
                 nonce+=1
+                signedTx = w3.eth.account.sing_transaction(tx, privateKey)
+                txHash = w3.eth.send_raw_transaction(signedTx.raw_transaction)
+                receipt = w3.eth.wait_for_transaction_receipt(txHash)
         else:
             unwraps = contract.events.Unwrap().get_logs(fromBlock=cur_block, toBlock = cur_block)
             for unwrap in unwraps:
                 tokenAddress = unwrap["args"]["token"]
                 recipient = unwrap["args"]["recipient"]
                 amount = unwrap["args"]["amount"]
-                contract.withdraw(tokenAddress, recipient, amount).build_transaction({
+                tx = contract.withdraw(tokenAddress, recipient, amount).build_transaction({
                     "from": accountAddress,
                     "nonce": nonce,
                     "gas": 30000,
                     "gasPrice": w3.eth.gas_price,
-                    "chainId": 43113
+                    "chainId": 97
                 })
                 nonce+=1
+                signedTx = w3.eth.account.sing_transaction(tx, privateKey)
+                txHash = w3.eth.send_raw_transaction(signedTx.raw_transaction)
+                receipt = w3.eth.wait_for_transaction_receipt(txHash)
         counter +=1
 
