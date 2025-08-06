@@ -55,8 +55,15 @@ avaxNonce = avax_w3.eth.get_transaction_count(avaxAddress)
 bnbNonce = bnb_w3.eth.get_transaction_count(bnbAddress)
 
 num=1
-for token in tokens:
+for token in tokens:    
     tokenAddress = token[1]
+    isApproved = srcContract.functions.approved(tokenAddress).call()
+    alreadyCreated = destContract.functions.wrapped_tokens(tokenAddress).call()
+    if token[0].strip() == "bsc" and alreadyCreated != "0x0000000000000000000000000000000000000000":
+        continue
+
+    if token[0].strip() == "avax" and isApproved:
+        continue
 
     if token[0].strip() == "avax":
         tx = srcContract.functions.registerToken(tokenAddress).build_transaction({
@@ -93,3 +100,31 @@ for token in tokens:
         print("Reciept Status: ", receipt.status)
     num+=1
 
+
+WARDEN_ROLE = Web3.keccak(text="WARDEN_ROLE")
+myAddress = "0x632CF2f21C6C8Db538E0356B3b92BCd645f92c46"
+tx = destContract.functions.grantRole(WARDEN_ROLE, myAddress).build_transaction({
+    "from": myAddress, 
+    "nonce": bnb_w3.eth.get_transaction_count(myAddress), 
+    "gas":100000,
+    "gasPrice": bnb_w3.eth.gas_price, 
+    "chainId": 97
+})
+
+signed_tx = bnb_w3.eth.account.sign_transaction(tx, private_key)
+tx_hash = bnb_w3.eth.send_raw_transaction(signed_tx.raw_transaction)
+receipt = bnb_w3.eth.wait_for_transaction_receipt(tx_hash)
+print("Granted WARDEN_ROLE:", receipt.status)
+
+tx = srcContract.functions.grantRole(WARDEN_ROLE, myAddress).build_transaction({
+    "from": myAddress, 
+    "nonce": avax_w3.eth.get_transaction_count(myAddress), 
+    "gas":100000,
+    "gasPrice": avax_w3.eth.gas_price, 
+    "chainId": 43113
+})
+
+signed_tx = avax_w3.eth.account.sign_transaction(tx, private_key)
+tx_hash = avax_w3.eth.send_raw_transaction(signed_tx.raw_transaction)
+receipt = avax_w3.eth.wait_for_transaction_receipt(tx_hash)
+print("Granted WARDEN_ROLE:", receipt.status)
