@@ -86,6 +86,7 @@ def scan_blocks(chain, contract_info="contract_info.json"):
                 tokenAddress = deposit["args"]["token"]
                 recipient = deposit["args"]["recipient"]
                 amount = deposit["args"]["amount"]
+                print(f"Calling wrap() with token: {tokenAddress}, recipient: {recipient}, amount: {amount}")
                 tx = activeContract.functions.wrap(tokenAddress, recipient, amount).build_transaction({
                     "from": activeAccountAddress, 
                     "nonce": activeNonce,
@@ -93,10 +94,12 @@ def scan_blocks(chain, contract_info="contract_info.json"):
                     "gasPrice": activeW3.eth.gas_price,
                     "chainId": 97
                 })
+
                 activeNonce+=1
                 signedTx = activeW3.eth.account.sign_transaction(tx, privateKey)
                 txHash = activeW3.eth.send_raw_transaction(signedTx.raw_transaction)
                 receipt = activeW3.eth.wait_for_transaction_receipt(txHash)
+                print(f"finished wrapping. Here are the results: \n txHash: {txHash}, \n receipt status: {receipt.status}")
         else:
             unwrapFilter = listenerContract.events.Unwrap.create_filter(from_block=cur_block, to_block = cur_block)
             unwraps = unwrapFilter.get_all_entries()
@@ -104,6 +107,7 @@ def scan_blocks(chain, contract_info="contract_info.json"):
                 tokenAddress = unwrap["args"]["token"]
                 recipient = unwrap["args"]["recipient"]
                 amount = unwrap["args"]["amount"]
+                print(f"Calling unwrap() with token: {tokenAddress}, recipient: {recipient}, amount: {amount}")
                 tx = activeContract.functions.withdraw(tokenAddress, recipient, amount).build_transaction({
                     "from": activeAccountAddress,
                     "nonce": activeNonce,
@@ -115,5 +119,7 @@ def scan_blocks(chain, contract_info="contract_info.json"):
                 signedTx = activeW3.eth.account.sign_transaction(tx, privateKey)
                 txHash = activeW3.eth.send_raw_transaction(signedTx.raw_transaction)
                 receipt = activeW3.eth.wait_for_transaction_receipt(txHash)
+                print(f"finished wrapping. Here are the results: \n txHash: {txHash}, \n receipt status: {receipt.status}")
+
         counter +=1
 
