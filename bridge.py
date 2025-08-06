@@ -3,6 +3,7 @@ from web3.providers.rpc import HTTPProvider
 from web3.middleware import ExtraDataToPOAMiddleware #Necessary for POA chains
 from datetime import datetime
 import json
+import time
 
 
 def connect_to(chain):
@@ -122,4 +123,6 @@ def scan_blocks(chain, contract_info="contract_info.json"):
                 print(f"finished wrapping. Here are the results: \n txHash: {txHash}, \n receipt status: {receipt.status}")
 
         counter +=1
+        time.sleep(3)
+
 
