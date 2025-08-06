@@ -63,6 +63,8 @@ def scan_blocks(chain, contract_info="contract_info.json"):
     listenerContract = listenerW3.eth.contract(abi = listenerContractInfo["abi"], address = listenerContractInfo["address"])
     activeContract = activeW3.eth.contract(abi = activeContractInfo["abi"], address = activeContractInfo["address"])
 
+    print("active contract abi: "{activeContractInfo["abi"]})
+
     #get accounts
     privateKey = "a79d513de7ecaa28514dbff0d1f5c84acc481cb00c9948d241fca21f4abc03ff"
     listenerAccount = listenerW3.eth.account.from_key(privateKey)
