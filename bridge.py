@@ -90,7 +90,7 @@ def scan_blocks(chain, contract_info="contract_info.json"):
                 tx = activeContract.functions.wrap(tokenAddress, recipient, amount).build_transaction({
                     "from": activeAccountAddress, 
                     "nonce": activeNonce,
-                    "gas": 150000, 
+                    "gas": 300000, 
                     "gasPrice": activeW3.eth.gas_price,
                     "chainId": 97
                 })
@@ -111,7 +111,7 @@ def scan_blocks(chain, contract_info="contract_info.json"):
                 tx = activeContract.functions.withdraw(tokenAddress, recipient, amount).build_transaction({
                     "from": activeAccountAddress,
                     "nonce": activeNonce,
-                    "gas": 150000,
+                    "gas": 300000,
                     "gasPrice": activeW3.eth.gas_price,
                     "chainId": 43113
                 })
