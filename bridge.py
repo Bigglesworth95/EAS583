@@ -63,8 +63,6 @@ def scan_blocks(chain, contract_info="contract_info.json"):
     listenerContract = listenerW3.eth.contract(abi = listenerContractInfo["abi"], address = listenerContractInfo["address"])
     activeContract = activeW3.eth.contract(abi = activeContractInfo["abi"], address = activeContractInfo["address"])
 
-    print(f"active contract abi: {activeContractInfo['abi']}")
-
     #get accounts
     privateKey = "a79d513de7ecaa28514dbff0d1f5c84acc481cb00c9948d241fca21f4abc03ff"
     listenerAccount = listenerW3.eth.account.from_key(privateKey)
@@ -90,12 +88,12 @@ def scan_blocks(chain, contract_info="contract_info.json"):
                 amount = deposit["args"]["amount"]
                 tx = activeContract.functions.wrap(tokenAddress, recipient, amount).build_transaction({
                     "from": activeAccountAddress, 
-                    "nonce": nonce,
+                    "nonce": activeNonce,
                     "gas": 30000, 
                     "gasPrice": activeW3.eth.gas_price,
                     "chainId": 43113
                 })
-                nonce+=1
+                activeNonce+=1
                 signedTx = activeW3.eth.account.sign_transaction(tx, privateKey)
                 txHash = activeW3.eth.send_raw_transaction(signedTx.raw_transaction)
                 receipt = activeW3.eth.wait_for_transaction_receipt(txHash)
@@ -108,12 +106,12 @@ def scan_blocks(chain, contract_info="contract_info.json"):
                 amount = unwrap["args"]["amount"]
                 tx = activeContract.functions.withdraw(tokenAddress, recipient, amount).build_transaction({
                     "from": activeAccountAddress,
-                    "nonce": nonce,
+                    "nonce": activeNonce,
                     "gas": 30000,
                     "gasPrice": activeW3.eth.gas_price,
                     "chainId": 97
                 })
-                nonce+=1
+                activeNonce+=1
                 signedTx = activeW3.eth.account.sign_transaction(tx, privateKey)
                 txHash = activeW3.eth.send_raw_transaction(signedTx.raw_transaction)
                 receipt = activeW3.eth.wait_for_transaction_receipt(txHash)
