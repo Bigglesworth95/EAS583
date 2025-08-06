@@ -70,7 +70,7 @@ def scan_blocks(chain, contract_info="contract_info.json"):
     while counter <= 4: 
         cur_block = w3.eth.block_number - counter
         if chain == "source":
-            depositFilter = contract.events.Deposit().create_filter(fromBlock=cur_block, toBlock=cur_block)
+            depositFilter = contract.events.Deposit().create_filter(from_block=cur_block, to_block=cur_block)
             deposits = depositFilter.get_all_entries(0)
             for deposit in deposits:
                 tokenAddress = deposit["args"]["token"]
@@ -88,7 +88,7 @@ def scan_blocks(chain, contract_info="contract_info.json"):
                 txHash = w3.eth.send_raw_transaction(signedTx.raw_transaction)
                 receipt = w3.eth.wait_for_transaction_receipt(txHash)
         else:
-            unwrapFilter = contract.events.Unwrap().create_filter(fromBlock=cur_block, toBlock = cur_block)
+            unwrapFilter = contract.events.Unwrap().create_filter(from_block=cur_block, to_block = cur_block)
             unwraps = unwrapFilter.get_all_entries()
             for unwrap in unwraps:
                 tokenAddress = unwrap["args"]["token"]
