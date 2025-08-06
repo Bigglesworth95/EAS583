@@ -71,7 +71,7 @@ def scan_blocks(chain, contract_info="contract_info.json"):
         cur_block = w3.eth.block_number - counter
         if chain == "source":
             depositFilter = contract.events.Deposit().create_filter(from_block=cur_block, to_block=cur_block)
-            deposits = depositFilter.get_all_entries(0)
+            deposits = depositFilter.get_all_entries()
             for deposit in deposits:
                 tokenAddress = deposit["args"]["token"]
                 recipient = deposit["args"]["recipient"]
