@@ -119,8 +119,3 @@ def scan_blocks(chain, contract_info="contract_info.json"):
             txHash = activeW3.eth.send_raw_transaction(signedTx.raw_transaction)
             receipt = activeW3.eth.wait_for_transaction_receipt(txHash)
             print(f"finished wrapping. Here are the results: \n txHash: {txHash}, \n receipt status: {receipt.status}")
-            WARDEN_ROLE = activeW3.keccak("WARDEN_ROLE")
-            has_warden = activeContract.functions.hasRole(WARDEN_ROLE, activeAccountAddress).call()
-            print("Caller has WARDEN_ROLE on destination:", has_warden)
-
-
