@@ -103,8 +103,8 @@ def scan_blocks(chain, contract_info="contract_info.json"):
         unwrapFilter = listenerContract.events.Unwrap.create_filter(from_block=cur_block-19, to_block = cur_block)
         unwraps = unwrapFilter.get_all_entries()
         for unwrap in unwraps:
-            tokenAddress = unwrap["args"]["token"]
-            recipient = unwrap["args"]["recipient"]
+            tokenAddress = unwrap["args"]["underlying_token"]
+            recipient = unwrap["args"]["to"]
             amount = unwrap["args"]["amount"]
             print(f"Calling unwrap() with token: {tokenAddress}, recipient: {recipient}, amount: {amount}")
             tx = activeContract.functions.withdraw(tokenAddress, recipient, amount).build_transaction({
