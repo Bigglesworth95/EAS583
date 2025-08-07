@@ -77,7 +77,7 @@ def scan_blocks(chain, contract_info="contract_info.json"):
 
     #scan
     #loop thru and get the info from each block
-    cur_block = listenerW3.eth.block_number - counter
+    cur_block = listenerW3.eth.block_number
     if chain == "source":
         depositFilter = listenerContract.events.Deposit.create_filter(from_block=cur_block-9, to_block=cur_block)
         deposits = depositFilter.get_all_entries()
