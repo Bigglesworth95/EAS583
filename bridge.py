@@ -79,7 +79,7 @@ def scan_blocks(chain, contract_info="contract_info.json"):
     #loop thru and get the info from each block
     cur_block = listenerW3.eth.block_number
     if chain == "source":
-        depositFilter = listenerContract.events.Deposit.create_filter(from_block=cur_block-9, to_block=cur_block)
+        depositFilter = listenerContract.events.Deposit.create_filter(from_block=cur_block-19, to_block=cur_block)
         deposits = depositFilter.get_all_entries()
         for deposit in deposits:
             tokenAddress = deposit["args"]["token"]
@@ -100,7 +100,7 @@ def scan_blocks(chain, contract_info="contract_info.json"):
             receipt = activeW3.eth.wait_for_transaction_receipt(txHash)
             #print(f"finished wrapping. Here are the results: \n txHash: {txHash}, \n receipt status: {receipt.status}")
     else:
-        unwrapFilter = listenerContract.events.Unwrap.create_filter(from_block=cur_block-9, to_block = cur_block)
+        unwrapFilter = listenerContract.events.Unwrap.create_filter(from_block=cur_block-19, to_block = cur_block)
         unwraps = unwrapFilter.get_all_entries()
         for unwrap in unwraps:
             tokenAddress = unwrap["args"]["token"]
