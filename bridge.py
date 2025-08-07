@@ -76,57 +76,51 @@ def scan_blocks(chain, contract_info="contract_info.json"):
 
 
     #scan
-    counter = 0
     #loop thru and get the info from each block
-    while counter <= 4: 
-        cur_block = listenerW3.eth.block_number - counter
-        if chain == "source":
-            depositFilter = listenerContract.events.Deposit.create_filter(from_block=cur_block, to_block=cur_block)
-            deposits = depositFilter.get_all_entries()
-            for deposit in deposits:
-                tokenAddress = deposit["args"]["token"]
-                recipient = deposit["args"]["recipient"]
-                amount = deposit["args"]["amount"]
-                #(f"Calling wrap() with token: {tokenAddress}, recipient: {recipient}, amount: {amount}")
-                tx = activeContract.functions.wrap(tokenAddress, recipient, amount).build_transaction({
-                    "from": activeAccountAddress, 
-                    "nonce": activeNonce,
-                    "gas": 300000, 
-                    "gasPrice": activeW3.eth.gas_price,
-                    "chainId": 97
-                })
+    cur_block = listenerW3.eth.block_number - counter
+    if chain == "source":
+        depositFilter = listenerContract.events.Deposit.create_filter(from_block=cur_block-9, to_block=cur_block)
+        deposits = depositFilter.get_all_entries()
+        for deposit in deposits:
+            tokenAddress = deposit["args"]["token"]
+            recipient = deposit["args"]["recipient"]
+            amount = deposit["args"]["amount"]
+            #(f"Calling wrap() with token: {tokenAddress}, recipient: {recipient}, amount: {amount}")
+            tx = activeContract.functions.wrap(tokenAddress, recipient, amount).build_transaction({
+                "from": activeAccountAddress, 
+                "nonce": activeNonce,
+                "gas": 300000, 
+                "gasPrice": activeW3.eth.gas_price,
+                "chainId": 97
+            })
 
-                activeNonce+=1
-                signedTx = activeW3.eth.account.sign_transaction(tx, privateKey)
-                txHash = activeW3.eth.send_raw_transaction(signedTx.raw_transaction)
-                receipt = activeW3.eth.wait_for_transaction_receipt(txHash)
-                #print(f"finished wrapping. Here are the results: \n txHash: {txHash}, \n receipt status: {receipt.status}")
-        else:
-            unwrapFilter = listenerContract.events.Unwrap.create_filter(from_block=cur_block, to_block = cur_block)
-            unwraps = unwrapFilter.get_all_entries()
-            for unwrap in unwraps:
-                tokenAddress = unwrap["args"]["token"]
-                recipient = unwrap["args"]["recipient"]
-                amount = unwrap["args"]["amount"]
-                print(f"Calling unwrap() with token: {tokenAddress}, recipient: {recipient}, amount: {amount}")
-                tx = activeContract.functions.withdraw(tokenAddress, recipient, amount).build_transaction({
-                    "from": activeAccountAddress,
-                    "nonce": activeNonce,
-                    "gas": 300000,
-                    "gasPrice": activeW3.eth.gas_price,
-                    "chainId": 43113
-                })
-                activeNonce+=1
-                signedTx = activeW3.eth.account.sign_transaction(tx, privateKey)
-                txHash = activeW3.eth.send_raw_transaction(signedTx.raw_transaction)
-                receipt = activeW3.eth.wait_for_transaction_receipt(txHash)
-                print(f"finished wrapping. Here are the results: \n txHash: {txHash}, \n receipt status: {receipt.status}")
-                WARDEN_ROLE = activeW3.keccak("WARDEN_ROLE")
-                has_warden = activeContract.functions.hasRole(WARDEN_ROLE, activeAccountAddress).call()
-                print("Caller has WARDEN_ROLE on destination:", has_warden)
-
-
-        counter +=1
-        time.sleep(1)
+            activeNonce+=1
+            signedTx = activeW3.eth.account.sign_transaction(tx, privateKey)
+            txHash = activeW3.eth.send_raw_transaction(signedTx.raw_transaction)
+            receipt = activeW3.eth.wait_for_transaction_receipt(txHash)
+            #print(f"finished wrapping. Here are the results: \n txHash: {txHash}, \n receipt status: {receipt.status}")
+    else:
+        unwrapFilter = listenerContract.events.Unwrap.create_filter(from_block=cur_block-9, to_block = cur_block)
+        unwraps = unwrapFilter.get_all_entries()
+        for unwrap in unwraps:
+            tokenAddress = unwrap["args"]["token"]
+            recipient = unwrap["args"]["recipient"]
+            amount = unwrap["args"]["amount"]
+            print(f"Calling unwrap() with token: {tokenAddress}, recipient: {recipient}, amount: {amount}")
+            tx = activeContract.functions.withdraw(tokenAddress, recipient, amount).build_transaction({
+                "from": activeAccountAddress,
+                "nonce": activeNonce,
+                "gas": 300000,
+                "gasPrice": activeW3.eth.gas_price,
+                "chainId": 43113
+            })
+            activeNonce+=1
+            signedTx = activeW3.eth.account.sign_transaction(tx, privateKey)
+            txHash = activeW3.eth.send_raw_transaction(signedTx.raw_transaction)
+            receipt = activeW3.eth.wait_for_transaction_receipt(txHash)
+            print(f"finished wrapping. Here are the results: \n txHash: {txHash}, \n receipt status: {receipt.status}")
+            WARDEN_ROLE = activeW3.keccak("WARDEN_ROLE")
+            has_warden = activeContract.functions.hasRole(WARDEN_ROLE, activeAccountAddress).call()
+            print("Caller has WARDEN_ROLE on destination:", has_warden)
 
 
